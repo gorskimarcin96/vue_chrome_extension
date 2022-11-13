@@ -1,0 +1,28 @@
+{
+  "name": "mgorski.dev",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "action": {
+    "default_title": "mgorski.dev",
+    "default_icon": "./logo.png",
+    "default_popup": "./index.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "notifications"
+  ],
+  "host_permissions": [
+    "*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "inject-script": {
+      "suggested_key": "Ctrl+Q",
+      "description": "Copy text to clipboard."
+    }
+  }
+}
