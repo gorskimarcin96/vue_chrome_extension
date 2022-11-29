@@ -1,6 +1,6 @@
 {
   "name": "vue_chrome_extension_clipboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "vite build"
   },

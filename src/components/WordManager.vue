@@ -17,6 +17,12 @@ export default {
         });
       }
     },
+    remove(key) {
+      if (confirm("Are you sure?")) {
+        this.words.splice(key, 1);
+        chrome.storage.sync.set({'words': this.words});
+      }
+    },
     clearList() {
       if (confirm("Are you sure?")) {
         chrome.storage.sync.set({'words': []});
@@ -47,7 +53,12 @@ export default {
 
 <template>
   <ol>
-    <li v-for="word in words">{{ word }}</li>
+    <li v-for="(word, key) in words">
+      <div class="d-flex">
+        <span>{{ word }}</span>
+        <span class="link-danger ms-auto" @click="remove(key)">remove</span>
+      </div>
+    </li>
     <li v-if="word" class="text-light">{{ word }}</li>
   </ol>
 
