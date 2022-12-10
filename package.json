@@ -1,6 +1,6 @@
 {
-  "name": "vue_chrome_extension_clipboard",
-  "version": "1.0.1",
+  "name": "vue_chrome_extension",
+  "version": "1.0.2",
   "scripts": {
     "build": "vite build"
   },
@@ -8,7 +8,8 @@
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.2",
     "export-from-json": "^1.7.0",
-    "vue": "^3.2.41"
+    "vue": "^3.2.41",
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.2",

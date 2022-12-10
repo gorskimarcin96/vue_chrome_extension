@@ -23,14 +23,6 @@ a.vue-link {
     width: 520px;
 }
 
-#app > header > img {
-    width: 80px;
-}
-
-#app > footer > img {
-    width: 40px;
-}
-
 .form-control:focus {
     color: #212529;
     background-color: #fff;

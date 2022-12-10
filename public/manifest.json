@@ -1,6 +1,6 @@
 {
   "name": "mgorski.dev",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 3,
   "action": {
     "default_title": "mgorski.dev",
@@ -24,5 +24,8 @@
       "suggested_key": "Ctrl+Q",
       "description": "Copy text to clipboard."
     }
+  },
+  "icons": {
+    "128": "logo.png"
   }
 }

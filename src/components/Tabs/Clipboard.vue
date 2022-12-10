@@ -52,6 +52,8 @@ export default {
 </script>
 
 <template>
+  <p v-if="words.length === 0 && word === ''" class="alert alert-warning py-2">Your list is empty.</p>
+
   <ol>
     <li v-for="(word, key) in words">
       <div class="d-flex">

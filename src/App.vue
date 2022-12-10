@@ -1,23 +1,15 @@
 <script setup>
-import WordManager from "./components/WordManager.vue";</script>
+import Tabs from "@/components/Tabs.vue";
+</script>
 
 <template>
-  <header>
-    <img alt="mgorski.dev" src="/logo.png" class="float-start me-3"/>
-    <h1 class="text-success text-uppercase">mgorski.dev</h1>
-    <p>Created by <a href="https://mgorski.dev" target="_blank">mgorski.dev</a>.</p>
+  <header class="pt-2 px-3 text-end">
+    You are not logged.
   </header>
 
-  <main class="my-5">
-    <WordManager/>
-  </main>
+  <Tabs/>
 
-  <footer>
-    <img alt="Vue logo" src="./assets/vue.svg" class="float-end ms-3"/>
-    <p class="pt-3">
-      You’ve successfully created a project with
-      <a href="https://vitejs.dev/" target="_blank" class="vue-link">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" class="vue-link">Vue 3</a>.
-    </p>
+  <footer class="pb-2 px-3">
+    <p class="small text-end m-0">Created by <a href="https://mgorski.dev" target="_blank">mgorski.dev</a>.</p>
   </footer>
 </template>
