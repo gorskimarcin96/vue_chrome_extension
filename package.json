@@ -1,14 +1,16 @@
 {
   "name": "vue_chrome_extension",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "build": "vite build"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
+    "axios": "^1.2.1",
     "bootstrap": "^5.2.2",
     "export-from-json": "^1.7.0",
     "vue": "^3.2.41",
+    "vue-axios": "^3.5.2",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
