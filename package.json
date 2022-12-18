@@ -1,6 +1,6 @@
 {
   "name": "vue_chrome_extension",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "build": "vite build"
   },

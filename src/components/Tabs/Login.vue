@@ -18,16 +18,17 @@ export default {
   },
   methods: {
     async login() {
-      let self = this;
-      let token = await apiAuth.login(self.user.email, self.password).catch((response) => {
+      let token = await apiAuth.login(this.user.email, this.password).catch((response) => {
         if (response.response && response.response.status) {
-          if (response.response.status === 400) {
-            self.error = 'Email or password is not valid.';
+          if (response.response.status === 401) {
+            this.error = response.response.data.message;
+          } else if (response.response.status === 400) {
+            this.error = 'Email or password is not valid.';
           } else if (response.response.status >= 500) {
-            self.error = 'Network error.';
+            this.error = 'Network error.';
           }
         } else if (response.message) {
-          self.error = response.message;
+          this.error = response.message;
         }
       });
 
@@ -35,11 +36,12 @@ export default {
         let user = await apiUser.me(token);
         user.token = token;
 
-        self.$emit('user-data', user);
+        this.$emit('user-data', user);
       }
-      this.password = null;
+      this.error = this.password = null;
     },
     logout() {
+      this.error = null;
       this.$emit('user-data', {
         id: null,
         email: null,
