@@ -21,14 +21,14 @@ export default {
       let token = await apiAuth.login(this.user.email, this.password).catch((response) => {
         if (response.response && response.response.status) {
           if (response.response.status === 401) {
-            this.error = response.response.data.message;
+            this.error = response.response.data.message ?? 'Not authorized';
           } else if (response.response.status === 400) {
             this.error = 'Email or password is not valid.';
           } else if (response.response.status >= 500) {
             this.error = 'Network error.';
           }
         } else if (response.message) {
-          this.error = response.message;
+          this.error = response.message ?? 'Network error.';
         }
       });
 
@@ -37,8 +37,8 @@ export default {
         user.token = token;
 
         this.$emit('user-data', user);
+        this.error = this.password = null;
       }
-      this.error = this.password = null;
     },
     logout() {
       this.error = null;

@@ -23,7 +23,18 @@ export default {
   methods: {
     setUserData(user) {
       this.user = user
+      chrome.storage.sync.set({'user': user});
     }
+  }
+  ,
+  created() {
+    document.addEventListener('DOMContentLoaded', async () => {
+      chrome.storage.sync.get('user', storageData => {
+        if (Object.keys(storageData).length !== 0) {
+          this.user = storageData.user
+        }
+      });
+    });
   }
 }
 </script>
