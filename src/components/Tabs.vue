@@ -21,19 +21,25 @@ export default {
     }
   },
   methods: {
+    setTab(currentTab) {
+      this.currentTab = currentTab;
+      chrome.storage.sync.set({'currentTab': currentTab});
+    },
     setUserData(user) {
       this.user = user
       chrome.storage.sync.set({'user': user});
     }
-  }
-  ,
+  },
   created() {
-    document.addEventListener('DOMContentLoaded', async () => {
-      chrome.storage.sync.get('user', storageData => {
-        if (Object.keys(storageData).length !== 0) {
-          this.user = storageData.user
-        }
-      });
+    chrome.storage.sync.get('currentTab', storageData => {
+      if (Object.keys(storageData).length !== 0) {
+        this.currentTab = storageData.currentTab
+      }
+    });
+    chrome.storage.sync.get('user', storageData => {
+      if (Object.keys(storageData).length !== 0) {
+        this.user = storageData.user
+      }
     });
   }
 }
@@ -51,7 +57,7 @@ export default {
 
   <nav>
     <ul class="nav nav-tabs border-success px-3">
-      <li class="nav-item" v-for="tab in tabs" :key="tab" @click="currentTab = tab">
+      <li class="nav-item" v-for="tab in tabs" :key="tab" @click="setTab(tab)">
         <button type="button" class="nav-link" :class="[{ 'bg-success text-white': currentTab === tab }]">
           {{ tab }}
         </button>

@@ -17,11 +17,15 @@ export default {
       passwords: [],
     }
   },
-  async created() {
-    await this.getPasswords();
+  created() {
+    chrome.storage.sync.get('passwordSearch', storageData => {
+      this.search = Object.keys(storageData).length === 0 ? '' : storageData.passwordSearch;
+      this.getPasswords();
+    });
   },
   methods: {
     async getPasswords() {
+      chrome.storage.sync.set({'passwordSearch': this.search});
       this.passwords = [];
 
       if (this.user.token) {
@@ -36,8 +40,8 @@ export default {
 
           this.passwords.push({
             id: data[i].id,
-            href: url.href ?? data[i].website,
-            domain: url.host ?? data[i].website,
+            href: url.href ?? url,
+            domain: url.host ?? url,
             login: data[i].login,
             description: data[i].description
           });
