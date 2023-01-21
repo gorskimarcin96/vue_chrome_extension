@@ -42,10 +42,8 @@ export default {
     }
   },
   created() {
-    document.addEventListener('DOMContentLoaded', async () => {
-      chrome.storage.sync.get('words', storageData => {
-        this.words = Object.values(storageData.words)
-      });
+    chrome.storage.sync.get('words', storageData => {
+      this.words = Object.values(storageData.words)
     });
   },
 }

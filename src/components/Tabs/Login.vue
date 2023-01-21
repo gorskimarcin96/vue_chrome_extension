@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     async login() {
-      let token = await apiAuth.login(this.user.email, this.password).catch((response) => {
+      let auth = await apiAuth.login(this.user.email, this.password).catch((response) => {
         if (response.response && response.response.status) {
           if (response.response.status === 401) {
             this.error = response.response.data.message ?? 'Not authorized';
@@ -32,9 +32,10 @@ export default {
         }
       });
 
-      if (token) {
-        let user = await apiUser.me(token);
-        user.token = token;
+      if (auth) {
+        let user = await apiUser.me(auth.token);
+        user.token = auth.token;
+        user.exp = auth.exp;
 
         this.$emit('user-data', user);
         this.error = this.password = null;
@@ -54,6 +55,9 @@ export default {
 
 <template>
   <div class="alert alert-success py-2" v-if="user.id !== null">You are logged.</div>
+  <div class="alert alert-info py-2" v-if="user.id !== null">
+    The life of the token lasts until <b>{{ (new Date(user.exp*1000)).toLocaleString() }}</b>.
+  </div>
   <div class="alert alert-danger py-2" v-if="error">{{ error }}</div>
 
   <div class="text-end" v-if="user.id === null">

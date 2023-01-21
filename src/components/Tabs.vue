@@ -15,6 +15,7 @@ export default {
         id: null,
         email: null,
         token: null,
+        exp: null
       },
       currentTab: 'Login',
       tabs: ['Passwords', 'Clipboard', 'Login']
@@ -37,8 +38,8 @@ export default {
       }
     });
     chrome.storage.sync.get('user', storageData => {
-      if (Object.keys(storageData).length !== 0) {
-        this.user = storageData.user
+      if (Object.keys(storageData).length !== 0 && storageData.user.exp * 1000 > Date.now()) {
+        this.user = storageData.user;
       }
     });
   }

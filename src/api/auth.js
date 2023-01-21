@@ -8,7 +8,7 @@ class auth {
                 password: password
             })
             .then((response) => {
-                return response.data.token;
+                return response.data;
             })
     }
 }
