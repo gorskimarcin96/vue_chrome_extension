@@ -1,6 +1,6 @@
 {
   "name": "vue_chrome_extension",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "scripts": {
     "build": "vite build"
   },
@@ -9,7 +9,6 @@
     "axios": "^1.2.1",
     "axios-cache-plugin": "^0.1.0",
     "bootstrap": "^5.2.2",
-    "export-from-json": "^1.7.0",
     "vue": "^3.2.41",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.1.6"

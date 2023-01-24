@@ -1,11 +1,19 @@
 <script>
-import exportFromJSON from "export-from-json";
+import apiWord from "@/api/word";
 
 export default {
+  props: {
+    user: {
+      id: null,
+      email: null,
+      token: null,
+    }
+  },
   data() {
     return {
       word: '',
       words: [],
+      added: null,
     }
   },
   methods: {
@@ -29,16 +37,10 @@ export default {
         this.words = [];
       }
     },
-    download() {
-      const data = this.words;
-      const fileName = "words";
-      const exportType = exportFromJSON.types.json;
+    async sendDataToApp() {
+      const response = await apiWord.add(this.user.token, this.words);
 
-      if (data) exportFromJSON({
-        data,
-        fileName,
-        exportType
-      });
+      this.added = response.added;
     }
   },
   created() {
@@ -51,6 +53,7 @@ export default {
 
 <template>
   <p v-if="words.length === 0 && word === ''" class="alert alert-warning py-2">Your list is empty.</p>
+  <div class="alert alert-success py-2" v-if="added">Added <b>{{ added }}</b> number of words to the app.</div>
 
   <ol>
     <li v-for="(word, key) in words">
@@ -63,7 +66,7 @@ export default {
   </ol>
 
   <div class="input-group mb-3">
-    <button class="btn btn-success" type="button" @click="download" id="download">Download</button>
+    <button class="btn btn-success" type="button" @click="sendDataToApp" id="send_data_to_app">Send to app</button>
     <button class="btn btn-warning" type="button" @click="clearList" id="clear_list">Clear list</button>
     <input type="text" class="form-control border-0 bg-dark border-success text-success" v-model="word">
     <button class="btn btn-success" type="button" @click="add" id="add">Add</button>
