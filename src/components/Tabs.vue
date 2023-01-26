@@ -38,7 +38,12 @@ export default {
       }
     });
     chrome.storage.sync.get('user', storageData => {
-      if (Object.keys(storageData).length !== 0 && storageData.user.exp * 1000 > Date.now()) {
+      if (Object.keys(storageData).length !== 0) {
+        if(storageData.user.exp * 1000 < Date.now()) {
+          storageData.user.exp = null;
+          storageData.user.token = null;
+        }
+
         this.user = storageData.user;
       }
     });
@@ -48,7 +53,7 @@ export default {
 
 <template>
   <header class="p-2 px-3 small text-end">
-    <div v-if="user.id">
+    <div v-if="user.token !== null">
       You are logged in as <span class="badge bg-success">{{ user.email }}</span>.
     </div>
     <div v-else>

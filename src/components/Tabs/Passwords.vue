@@ -8,6 +8,7 @@ export default {
       id: null,
       email: null,
       token: null,
+      exp: null,
     }
   },
   data() {
@@ -63,7 +64,8 @@ export default {
 </script>
 
 <template>
-  <div v-if="user.id">
+  <div v-if="user.token === null" class="alert alert-warning py-2">You are not logged.</div>
+  <div v-else>
     <div class="btn-group w-100 mb-2">
       <input type="text" class="form-control" v-model="search" v-on:keyup.enter="getPasswords()">
       <button class="btn btn-success" type="button" @click="getPasswords()">Search</button>
