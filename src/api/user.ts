@@ -1,7 +1,7 @@
-import api from "@/api/api";
+import api from "./api";
 
 class user {
-    static async me(token) {
+    static async me(token: string) {
         return api
             .get('/user/me', {
                 headers: {'X-AUTH-TOKEN': token}

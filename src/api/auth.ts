@@ -1,7 +1,7 @@
-import api from "@/api/api";
+import api from "./api";
 
 class auth {
-    static async login(email, password) {
+    static async login(email:string, password:string) {
         return api
             .post('/auth', {
                 email: email,

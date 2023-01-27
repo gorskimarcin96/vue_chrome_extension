@@ -1,34 +1,33 @@
-<script>
+<script lang="ts">
+import {User} from "../models/User";
+import Login from "./Tabs/Login.vue";
+import Passwords from "./Tabs/Passwords.vue";
 import Clipboard from "./Tabs/Clipboard.vue";
-import Passwords from "@/components/Tabs/Passwords.vue";
-import Login from "@/components/Tabs/Login.vue";
+import {defineComponent} from 'vue';
 
-export default {
+export default defineComponent({
   components: {
-    Passwords,
-    Clipboard,
     Login,
+    Clipboard,
+    Passwords
   },
-  data() {
+  data: function () {
     return {
-      user: {
-        id: null,
-        email: null,
-        token: null,
-        exp: null
-      },
+      user: null as User | null,
       currentTab: 'Login',
-      tabs: ['Passwords', 'Clipboard', 'Login']
+      tabs: ['Passwords', 'Clipboard', 'Login'] as string[]
     }
   },
   methods: {
-    setTab(currentTab) {
+    setTab(currentTab: string) {
       this.currentTab = currentTab;
       chrome.storage.sync.set({'currentTab': currentTab});
     },
-    setUserData(user) {
+    setUserData: function (user: User | null) {
       this.user = user
-      chrome.storage.sync.set({'user': user});
+      if (user) {
+        chrome.storage.sync.set({'user': {id: user.id, email: user.email, token: user.token, exp: user.exp}});
+      }
     }
   },
   created() {
@@ -39,21 +38,16 @@ export default {
     });
     chrome.storage.sync.get('user', storageData => {
       if (Object.keys(storageData).length !== 0) {
-        if(storageData.user.exp * 1000 < Date.now()) {
-          storageData.user.exp = null;
-          storageData.user.token = null;
-        }
-
-        this.user = storageData.user;
+        this.user = new User(storageData.user.id, storageData.user.email, storageData.user.token, storageData.user.exp);
       }
     });
   }
-}
+});
 </script>
 
 <template>
   <header class="p-2 px-3 small text-end">
-    <div v-if="user.token !== null">
+    <div v-if="user">
       You are logged in as <span class="badge bg-success">{{ user.email }}</span>.
     </div>
     <div v-else>

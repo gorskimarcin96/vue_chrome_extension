@@ -1,19 +1,19 @@
-<script>
-import apiWord from "@/api/word";
+<script lang="ts">
+import {User} from "../../models/User";
+import {defineComponent} from 'vue';
+import apiWord from "./../../api/word"
 
-export default {
+export default defineComponent({
   props: {
     user: {
-      id: null,
-      email: null,
-      token: null,
-      exp: null,
-    }
+      required: false,
+      type: User,
+    },
   },
   data() {
     return {
       word: '',
-      words: [],
+      words: [] as string[],
       added: null,
     }
   },
@@ -26,7 +26,7 @@ export default {
         });
       }
     },
-    remove(key) {
+    remove(key: number) {
       if (confirm("Are you sure?")) {
         this.words.splice(key, 1);
         chrome.storage.sync.set({'words': this.words});
@@ -39,9 +39,10 @@ export default {
       }
     },
     async sendDataToApp() {
-      const response = await apiWord.add(this.user.token, this.words);
-
-      this.added = response.added;
+      if (this.user && this.user.token) {
+        const response = await apiWord.add(this.user.token, this.words);
+        this.added = response.added;
+      }
     }
   },
   created() {
@@ -49,7 +50,7 @@ export default {
       this.words = Object.values(storageData.words)
     });
   },
-}
+});
 </script>
 
 <template>
@@ -67,7 +68,9 @@ export default {
   </ol>
 
   <div class="input-group mb-3">
-    <button class="btn btn-success" type="button" @click="sendDataToApp" id="send_data_to_app">Send to app</button>
+    <button class="btn btn-success" type="button" @click="sendDataToApp" id="send_data_to_app" v-if="user">
+      Send to app
+    </button>
     <button class="btn btn-warning" type="button" @click="clearList" id="clear_list">Clear list</button>
     <input type="text" class="form-control border-0 bg-dark border-success text-success" v-model="word">
     <button class="btn btn-success" type="button" @click="add" id="add">Add</button>

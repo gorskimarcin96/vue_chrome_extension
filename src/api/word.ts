@@ -1,7 +1,7 @@
-import api from "@/api/api";
+import api from "./api";
 
 class word {
-    static async add(token, words) {
+    static async add(token: string, words: string[]) {
         return api
             .post('/word/', words, {
                 headers: {'X-AUTH-TOKEN': token}
