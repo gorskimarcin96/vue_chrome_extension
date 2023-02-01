@@ -1,6 +1,6 @@
 {
   "name": "mgorski.dev",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "manifest_version": 3,
   "action": {
     "default_title": "mgorski.dev",
@@ -14,7 +14,8 @@
     "notifications"
   ],
   "host_permissions": [
-    "*"
+    "http://*/*",
+    "https://*/*"
   ],
   "background": {
     "service_worker": "background.js"

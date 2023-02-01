@@ -44,6 +44,17 @@ export default defineComponent({
         await navigator.clipboard.writeText(password);
         this.message = 'Added password for "<b>' + this.passwords[key].domain + '</b>" to clipboard.';
       }
+    },
+    async login(key: number) {
+      if (this.user && this.user.token) {
+        const password = await apiPassword.getPassword(this.user.token, this.passwords[key].id);
+
+        chrome.runtime.sendMessage({
+          event_name: "log_in",
+          login: this.passwords[key].login,
+          password: password
+        });
+      }
     }
   }
 });
@@ -74,6 +85,7 @@ export default defineComponent({
             <div class="btn-group w-100 mb-2">
               <button class="btn btn-sm btn-success" type="button" @click="copyLogin(key)">Login</button>
               <button class="btn btn-sm btn-warning" type="button" @click="copyPassword(key)">Password</button>
+              <button class="btn btn-sm btn-primary" type="button" @click="login(key)">Log in</button>
             </div>
           </td>
         </tr>
