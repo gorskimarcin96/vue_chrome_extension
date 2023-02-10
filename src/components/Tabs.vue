@@ -4,18 +4,20 @@ import Login from "./Tabs/Login.vue";
 import Passwords from "./Tabs/Passwords.vue";
 import Clipboard from "./Tabs/Clipboard.vue";
 import {defineComponent} from 'vue';
+import Todo from "./Tabs/Todo/Todo.vue";
 
 export default defineComponent({
   components: {
     Login,
     Clipboard,
+    Todo,
     Passwords
   },
   data: function () {
     return {
       user: null as User | null,
       currentTab: 'Login',
-      tabs: ['Passwords', 'Clipboard', 'Login'] as string[]
+      tabs: ['Passwords', 'Todo', 'Clipboard', 'Login'] as string[]
     }
   },
   methods: {
@@ -47,7 +49,7 @@ export default defineComponent({
 
 <template>
   <header class="p-2 px-3 small text-end">
-    <div v-if="user">
+    <div v-if="user && user.token">
       You are logged in as <span class="badge bg-success">{{ user.email }}</span>.
     </div>
     <div v-else>
