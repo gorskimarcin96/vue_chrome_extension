@@ -10,10 +10,7 @@ import {TodoTask as TodoTaskModel} from "../../../models/TodoTask";
 export default defineComponent({
   components: {TodoTask, TodoList},
   props: {
-    user: {
-      required: false,
-      type: UserModel,
-    },
+    user: {required: false, type: UserModel},
   },
   data() {
     return {
@@ -21,12 +18,8 @@ export default defineComponent({
       formTodoList: new TodoListModel()
     }
   },
-  watch: {
-    user() {
-      if (!this.todoLists.length) {
-        this.getTodos();
-      }
-    }
+  created() {
+    this.getTodos();
   },
   methods: {
     async getTodos() {

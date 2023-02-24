@@ -7,21 +7,22 @@ import moment from "moment";
 
 export default defineComponent({
   props: {
-    user: {
-      required: false,
-      type: User,
-    },
+    user: {required: false, type: User},
   },
   data() {
     return {
       error: null as string | null,
+      email: null as string | null,
       password: null as string | null
     }
   },
+  created() {
+    this.email = this.user ? this.user.email : null;
+  },
   methods: {
     async login() {
-      if (this.user && this.password) {
-        let auth = await apiAuth.login(this.user.email, this.password).catch((response) => {
+      if (this.email && this.password) {
+        let auth = await apiAuth.login(this.email, this.password).catch((response) => {
           if (response.response && response.response.status) {
             if (response.response.status === 401) {
               this.error = response.response.data.message ?? 'Not authorized';
@@ -36,22 +37,15 @@ export default defineComponent({
         });
 
         if (auth) {
-          let user = await apiUser.me(auth.token);
-          user.token = auth.token;
-          user.exp = auth.exp;
-
-          this.$emit('user-data', user);
+          const user = await apiUser.me(auth.token);
+          this.$emit('user-data', new User(user.id, user.email, auth.token, auth.exp));
           this.error = this.password = null;
         }
       }
     },
     logout() {
       this.error = null;
-      this.$emit('user-data', {
-        id: null,
-        email: null,
-        token: null,
-      });
+      this.$emit('user-data', this.user ? new User(user.id, user.email, user.token, 0) : null);
     },
     getDeadlineToken() {
       return this.user && this.user.exp ? moment(new Date(this.user.exp * 1000)).format('YYYY-MM-DD HH:mm') : null;
@@ -67,8 +61,8 @@ export default defineComponent({
   </div>
   <div class="alert alert-danger py-2" v-if="error">{{ error }}</div>
 
-  <div class="text-end" v-if="user && user.token === null">
-    <input type="email" class="form-control" v-model="user.email">
+  <div class="text-end" v-if="user === null || (user && user.token === null)">
+    <input type="email" class="form-control" v-model="email">
     <input type="password" class="form-control my-2" v-model="password" v-on:keyup.enter="login()">
     <button class="btn btn-success" type="button" @click="login" id="login">Login</button>
   </div>

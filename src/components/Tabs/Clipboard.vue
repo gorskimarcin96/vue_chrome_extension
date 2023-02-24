@@ -2,13 +2,11 @@
 import {User} from "../../models/User";
 import {defineComponent} from 'vue';
 import apiWord from "./../../api/word"
+import storage from "../../storage/storage";
 
 export default defineComponent({
   props: {
-    user: {
-      required: false,
-      type: User,
-    },
+    user: {required: false, type: User},
   },
   data() {
     return {
@@ -21,20 +19,19 @@ export default defineComponent({
     add() {
       if (this.word) {
         this.words.push(this.word);
-        chrome.storage.sync.set({'words': this.words}, () => {
-          this.word = '';
-        });
+        storage.setWords(this.words);
+        this.word = '';
       }
     },
     remove(key: number) {
       if (confirm("Are you sure?")) {
         this.words.splice(key, 1);
-        chrome.storage.sync.set({'words': this.words});
+        storage.setWords(this.words);
       }
     },
     clearList() {
       if (confirm("Are you sure?")) {
-        chrome.storage.sync.set({'words': []});
+        storage.setWords([])
         this.words = [];
       }
     },
@@ -45,10 +42,8 @@ export default defineComponent({
       }
     }
   },
-  created() {
-    chrome.storage.sync.get('words', storageData => {
-      this.words = Object.values(storageData.words)
-    });
+  async created() {
+    this.words = await storage.getWords() ?? [];
   },
 });
 </script>

@@ -3,13 +3,11 @@ import {User} from "../../models/User";
 import {defineComponent} from 'vue';
 import apiPassword from "./../../api/password"
 import {Password} from "../../models/Password";
+import storage from "../../storage/storage";
 
 export default defineComponent({
   props: {
-    user: {
-      required: false,
-      type: User,
-    },
+    user: {required: false, type: User},
   },
   data() {
     return {
@@ -18,15 +16,13 @@ export default defineComponent({
       passwords: [] as Password[],
     }
   },
-  created() {
-    chrome.storage.sync.get('passwordSearch', storageData => {
-      this.search = Object.keys(storageData).length === 0 ? '' : storageData.passwordSearch;
-      this.getPasswords();
-    });
+  async created() {
+    this.search = await storage.getPasswordSearch() ?? '';
+    await this.getPasswords();
   },
   methods: {
     async getPasswords() {
-      await chrome.storage.sync.set({'passwordSearch': this.search});
+      storage.setPasswordSearch(this.search);
       this.passwords = [];
 
       if (this.user && this.user.token) {
@@ -46,14 +42,19 @@ export default defineComponent({
       }
     },
     async login(key: number) {
-      if (this.user && this.user.token) {
-        const password = await apiPassword.getPassword(this.user.token, this.passwords[key].id);
+      if (process.env.NODE_ENV === 'development') {
+        alert('Its not work for development mode.');
+      } else {
+        if (this.user && this.user.token) {
+          const password = await apiPassword.getPassword(this.user.token, this.passwords[key].id);
 
-        chrome.runtime.sendMessage({
-          event_name: "log_in",
-          login: this.passwords[key].login,
-          password: password
-        });
+          chrome.runtime.sendMessage({
+            event_name: "log_in",
+            login: this.passwords[key].login,
+            password: password,
+            url: this.passwords[key].href
+          });
+        }
       }
     }
   }

@@ -5,6 +5,7 @@ import Passwords from "./Tabs/Passwords.vue";
 import Clipboard from "./Tabs/Clipboard.vue";
 import {defineComponent} from 'vue';
 import Todo from "./Tabs/Todo/Todo.vue";
+import storage from "../storage/storage";
 
 export default defineComponent({
   components: {
@@ -15,6 +16,7 @@ export default defineComponent({
   },
   data: function () {
     return {
+      isDevelopmentMode: false,
       user: null as User | null,
       currentTab: 'Login',
       tabs: ['Passwords', 'Todo', 'Clipboard', 'Login'] as string[]
@@ -23,38 +25,28 @@ export default defineComponent({
   methods: {
     setTab(currentTab: string) {
       this.currentTab = currentTab;
-      chrome.storage.sync.set({'currentTab': currentTab});
+      storage.setCurrentTab(currentTab)
     },
     setUserData: function (user: User | null) {
       this.user = user
-      if (user) {
-        chrome.storage.sync.set({'user': {id: user.id, email: user.email, token: user.token, exp: user.exp}});
-      }
+      storage.setUser(user);
     }
   },
-  created() {
-    chrome.storage.sync.get('currentTab', storageData => {
-      if (Object.keys(storageData).length !== 0) {
-        this.currentTab = storageData.currentTab
-      }
-    });
-    chrome.storage.sync.get('user', storageData => {
-      if (Object.keys(storageData).length !== 0) {
-        this.user = new User(storageData.user.id, storageData.user.email, storageData.user.token, storageData.user.exp);
-      }
-    });
+  created: async function () {
+    this.isDevelopmentMode = process.env.NODE_ENV === 'development';
+    this.user = await storage.getUser();
+    this.currentTab = await storage.getCurrentTab() ?? 'Login';
   }
 });
 </script>
 
 <template>
   <header class="p-2 px-3 small text-end">
-    <div v-if="user && user.token">
+    <span class="mx-2 badge bg-danger" v-if="isDevelopmentMode === true">DEV MODE</span>
+    <span v-if="user && user.token">
       You are logged in as <span class="badge bg-success">{{ user.email }}</span>.
-    </div>
-    <div v-else>
-      <span class="badge bg-warning text-dark">You are not logged.</span>
-    </div>
+    </span>
+    <span v-else class="badge bg-warning text-dark">You are not logged.</span>
   </header>
 
   <nav>
