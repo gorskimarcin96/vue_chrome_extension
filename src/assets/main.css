@@ -13,6 +13,14 @@ body {
     margin: 1px 1px 2px 1px;
 }
 
+a {
+    color: var(--bs-link-color);
+}
+
+a:hover {
+    color: var(--bs-link-hover-color);
+}
+
 a.vue-link {
     text-decoration: none;
     color: hsla(160, 100%, 37%, 1);

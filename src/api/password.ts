@@ -1,5 +1,6 @@
 import api from "./api";
 import {Password} from "../models/Password";
+import {FormPassword} from "../models/FormPassword";
 
 class password {
     static async list(token: string, phrase: string = ''): Promise<Password[]> {
@@ -40,6 +41,34 @@ class password {
             })
             .then((response) => {
                 return response.data.password;
+            })
+    }
+
+    static async addPassword(token: string, password: FormPassword): Promise<Password> {
+        return api
+            .post('/password/add', {
+                website: password.website,
+                password: password.password,
+                login: password.login,
+                description: password.description,
+            }, {
+                headers: {
+                    'X-AUTH-TOKEN': token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => {
+                let href = response.data.website;
+                let domain = response.data.website;
+
+                try {
+                    const url = new URL(response.data.website);
+                    href = url.href;
+                    domain = url.host;
+                } catch (e) {
+                }
+
+                return new Password(response.data.id, href, domain, response.data.login, response.data.description);
             })
     }
 }

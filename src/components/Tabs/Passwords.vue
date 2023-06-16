@@ -4,6 +4,7 @@ import {defineComponent} from 'vue';
 import apiPassword from "./../../api/password"
 import {Password} from "../../models/Password";
 import storage from "../../storage/storage";
+import {FormPassword} from "../../models/FormPassword";
 
 export default defineComponent({
   props: {
@@ -11,14 +12,31 @@ export default defineComponent({
   },
   data() {
     return {
+      showForm: true,
+      passwordLength: 20,
+      isLowerAZ: true,
+      isUpperAZ: true,
+      isNumeric: true,
+      isSpecial: true,
       message: null as string | null,
       search: '' as string,
       passwords: [] as Password[],
+      formPassword: new FormPassword('', '', '', ''),
     }
   },
   async created() {
     this.search = await storage.getPasswordSearch() ?? '';
     await this.getPasswords();
+
+    if (this.user) {
+      this.formPassword.login = this.user.email;
+    }
+
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+      this.formPassword.website = tabs[0].url;
+    });
+
+    this.generatePassword();
   },
   methods: {
     async getPasswords() {
@@ -56,6 +74,48 @@ export default defineComponent({
           });
         }
       }
+    },
+    changeStatusForIsSpecial() {
+      this.isSpecial = !this.isSpecial;
+    },
+    changeStatusForIsLowerAZ() {
+      this.isLowerAZ = !this.isLowerAZ;
+    },
+    changeStatusForIsUpperAZ() {
+      this.isUpperAZ = !this.isUpperAZ;
+    },
+    changeStatusForIsNumeric() {
+      this.isNumeric = !this.isNumeric;
+    },
+    generatePassword() {
+      const chars = ""
+          + (this.isLowerAZ ? 'abcdefghijklmnopqrstuvwxyz' : '')
+          + (this.isUpperAZ ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' : '')
+          + (this.isNumeric ? '0123456789' : '')
+          + (this.isSpecial ? '!@#$%^&*' : '');
+
+      let password = '';
+
+      for (let i = 1; i <= this.passwordLength; i++) {
+        const char = Math.floor(Math.random() * chars.length + 1);
+
+        password += chars.charAt(char)
+      }
+
+      this.formPassword.password = password;
+    },
+    addPassword() {
+      this.showForm = false;
+
+      if (this.user && this.user.token) {
+        apiPassword.addPassword(this.user.token, this.formPassword).then(() => {
+          this.showForm = true;
+          this.message = 'Password is added.';
+        }).catch((reason) => {
+          this.showForm = true;
+          this.message = reason.toString();
+        });
+      }
     }
   }
 });
@@ -70,7 +130,7 @@ export default defineComponent({
     </div>
     <div class="alert alert-info py-2" v-if="message" v-html="message"></div>
     <div class="table-responsive">
-      <table class="table border-success text-light">
+      <table class="table table-dark border-success text-light">
         <thead>
         <tr>
           <th>Website</th>
@@ -92,6 +152,63 @@ export default defineComponent({
         </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="card bg-dark text-light border-success" v-if="showForm">
+      <div class="card-header fw-bold border-success">New password</div>
+      <div class="card-body">
+        <div class="row g-2 align-items-center">
+          <div class="col-3">
+            <label for="website" class="col-form-label">Website</label>
+          </div>
+          <div class="col-9">
+            <input type="text" id="website" class="form-control" v-model="formPassword['_website']" required>
+          </div>
+
+          <div class="col-3">
+            <label for="login" class="col-form-label">Login</label>
+          </div>
+          <div class="col-9">
+            <input type="text" id="login" class="form-control" v-model="formPassword['_login']" required>
+          </div>
+
+          <div class="col-3">
+            <label for="password" class="col-form-label">Password</label>
+          </div>
+          <div class="col-9 align-text-top">
+            <div class="input-group">
+              <input type="number" class="form-control" v-model="passwordLength" min="1" required>
+              <button class="btn" :class="{ 'btn-outline-warning': !isSpecial, 'btn-warning': isSpecial }"
+                      @click="changeStatusForIsSpecial()">S
+              </button>
+              <button class="btn" :class="{ 'btn-outline-warning': !isLowerAZ, 'btn-warning': isLowerAZ }"
+                      @click="changeStatusForIsLowerAZ()">a-z
+              </button>
+              <button class="btn" :class="{ 'btn-outline-warning': !isUpperAZ, 'btn-warning': isUpperAZ }"
+                      @click="changeStatusForIsUpperAZ()">A-Z
+              </button>
+              <button class="btn" :class="{ 'btn-outline-warning': !isNumeric, 'btn-warning': isNumeric }"
+                      @click="changeStatusForIsNumeric()">0-9
+              </button>
+              <button class="btn btn-success" @click="generatePassword">
+                <font-awesome-icon icon="fa-solid fa-random"/>
+              </button>
+            </div>
+            <div class="input-group">
+              <input type="text" id="password" class="form-control" v-model="formPassword['_password']" required>
+            </div>
+          </div>
+
+          <div class="col-3">
+            <label for="description" class="col-form-label">Description</label>
+          </div>
+          <div class="col-9">
+            <input type="text" id="description" class="form-control" v-model="formPassword['_description']">
+          </div>
+
+          <button class="btn btn-success" type="button" @click="addPassword">Add</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
