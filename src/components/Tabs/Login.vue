@@ -37,9 +37,14 @@ export default defineComponent({
         });
 
         if (auth) {
-          const user = await apiUser.me(auth.token);
-          this.$emit('user-data', new User(user.id, user.email, auth.token, auth.exp));
-          this.error = this.password = null;
+          const user = await apiUser.me(auth.token).catch((response) => {
+            this.error = response.response.data.message;
+          })
+
+          if (user) {
+            this.$emit('user-data', new User(user.id, user.email, auth.token, auth.exp));
+            this.error = this.password = null;
+          }
         }
       }
     },
