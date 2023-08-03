@@ -1,7 +1,7 @@
 <script lang="ts">
 import {User} from "../../models/User";
 import {defineComponent} from 'vue';
-import apiWord from "./../../api/word"
+import apiWord from "./../../api/mgorski/word"
 import storage from "../../storage/storage";
 
 export default defineComponent({

@@ -5,10 +5,14 @@ import Passwords from "./Tabs/Passwords.vue";
 import Clipboard from "./Tabs/Clipboard.vue";
 import {defineComponent} from 'vue';
 import Todo from "./Tabs/Todo/Todo.vue";
+import Header from "./Header.vue";
+import Footer from "./Footer.vue";
 import storage from "../storage/storage";
 
 export default defineComponent({
   components: {
+    Header,
+    Footer,
     Login,
     Clipboard,
     Todo,
@@ -16,7 +20,6 @@ export default defineComponent({
   },
   data: function () {
     return {
-      isDevelopmentMode: false,
       user: null as User | null,
       currentTab: 'Login',
       tabs: ['Passwords', 'Todo', 'Clipboard', 'Login'] as string[]
@@ -33,7 +36,6 @@ export default defineComponent({
     }
   },
   created: async function () {
-    this.isDevelopmentMode = process.env.NODE_ENV === 'development';
     this.user = await storage.getUser();
     this.currentTab = await storage.getCurrentTab() ?? 'Login';
   }
@@ -41,13 +43,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <header class="p-2 px-3 small text-end">
-    <span class="mx-2 badge bg-danger" v-if="isDevelopmentMode === true">DEV MODE</span>
-    <span v-if="user && user.token">
-      You are logged in as <span class="badge bg-success">{{ user.email }}</span>.
-    </span>
-    <span v-else class="badge bg-warning text-dark">You are not logged.</span>
-  </header>
+  <Header v-bind:user="user"/>
 
   <nav>
     <ul class="nav nav-tabs border-success px-3">
@@ -62,4 +58,6 @@ export default defineComponent({
   <main class="my-2 p-3">
     <component :is="currentTab" @user-data="setUserData" v-bind:user="user" class="tab"></component>
   </main>
+
+  <Footer/>
 </template>

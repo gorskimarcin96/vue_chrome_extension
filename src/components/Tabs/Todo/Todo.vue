@@ -1,6 +1,6 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
-import apiTodo from "../../../api/todo";
+import apiTodo from "../../../api/mgorski/todo";
 import TodoTask from "./TodoTask.vue";
 import TodoList from "./TodoList.vue";
 import {User as UserModel} from "../../../models/User";

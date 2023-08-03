@@ -1,7 +1,7 @@
 <script lang="ts">
 import {User} from "../../models/User";
 import {defineComponent} from 'vue';
-import apiPassword from "./../../api/password"
+import apiPassword from "./../../api/mgorski/password"
 import {Password} from "../../models/Password";
 import storage from "../../storage/storage";
 import {FormPassword} from "../../models/FormPassword";

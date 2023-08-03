@@ -1,8 +1,8 @@
 <script lang="ts">
 import {User} from "../../models/User";
 import {defineComponent} from 'vue'
-import apiAuth from "./../../api/auth"
-import apiUser from "./../../api/user"
+import apiAuth from "./../../api/mgorski/auth"
+import apiUser from "./../../api/mgorski/user"
 import moment from "moment";
 
 export default defineComponent({

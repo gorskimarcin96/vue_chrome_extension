@@ -1,6 +1,6 @@
 import api from "./api";
-import {Password} from "../models/Password";
-import {FormPassword} from "../models/FormPassword";
+import {Password} from "../../models/Password";
+import {FormPassword} from "../../models/FormPassword";
 
 class password {
     static async list(token: string, phrase: string = ''): Promise<Password[]> {

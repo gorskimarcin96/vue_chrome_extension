@@ -1,5 +1,5 @@
-import {TodoList} from "../models/TodoList";
-import {TodoTask} from "../models/TodoTask";
+import {TodoList} from "../../models/TodoList";
+import {TodoTask} from "../../models/TodoTask";
 import api from "./api";
 import moment from "moment";
 
