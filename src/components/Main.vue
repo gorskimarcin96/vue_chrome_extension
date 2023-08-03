@@ -2,6 +2,7 @@
 import {User} from "../models/User";
 import Login from "./Tabs/Login.vue";
 import Passwords from "./Tabs/Passwords.vue";
+import Currency from "./Tabs/Currency/Currency.vue";
 import Clipboard from "./Tabs/Clipboard.vue";
 import {defineComponent} from 'vue';
 import Todo from "./Tabs/Todo/Todo.vue";
@@ -16,13 +17,14 @@ export default defineComponent({
     Login,
     Clipboard,
     Todo,
-    Passwords
+    Passwords,
+    Currency
   },
   data: function () {
     return {
       user: null as User | null,
       currentTab: 'Login',
-      tabs: ['Passwords', 'Todo', 'Clipboard', 'Login'] as string[]
+      tabs: ['Passwords', 'Todo', 'Currency', 'Clipboard', 'Login'] as string[]
     }
   },
   methods: {

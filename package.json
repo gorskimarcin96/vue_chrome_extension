@@ -1,6 +1,6 @@
 {
   "name": "vue_chrome_extension",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
@@ -14,8 +14,10 @@
     "axios": "^1.2.5",
     "axios-cache-plugin": "^0.1.0",
     "bootstrap": "^5.2.3",
+    "chart.js": "^4.3.3",
     "moment": "^2.29.4",
-    "vue": "^3.2.45"
+    "vue": "^3.2.45",
+    "vue-chartjs": "^5.2.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.210",
