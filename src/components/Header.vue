@@ -3,6 +3,7 @@
 import {defineComponent} from "vue";
 import {User} from "../models/User";
 import ip from "../api/ipify/ip";
+import {notify} from "../utils/notification";
 
 export default defineComponent({
   props: {
@@ -18,6 +19,7 @@ export default defineComponent({
   methods: {
     async copyIP() {
       navigator.clipboard.writeText(this.ip.trim());
+      notify('Added IP "' + this.ip.trim() + '" to clipboard.');
     }
   },
   created: async function () {

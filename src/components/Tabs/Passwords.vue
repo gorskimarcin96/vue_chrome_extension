@@ -5,6 +5,7 @@ import apiPassword from "./../../api/mgorski/password"
 import {Password} from "../../models/Password";
 import storage from "../../storage/storage";
 import {FormPassword} from "../../models/FormPassword";
+import {notify} from "@/utils/notification";
 
 export default defineComponent({
   props: {
@@ -18,7 +19,6 @@ export default defineComponent({
       isUpperAZ: true,
       isNumeric: true,
       isSpecial: true,
-      message: null as string | null,
       search: '' as string,
       passwords: [] as Password[],
       formPassword: new FormPassword('', '', '', ''),
@@ -50,13 +50,13 @@ export default defineComponent({
     copyLogin(key: number) {
       const login = this.passwords[key].login;
       navigator.clipboard.writeText(login);
-      this.message = 'Added login "<b>' + login + '</b>" to clipboard.';
+      notify('Added login "' + login + '" to clipboard.');
     },
     async copyPassword(key: number) {
       if (this.user && this.user.token) {
         const password = await apiPassword.getPassword(this.user.token, this.passwords[key].id);
         await navigator.clipboard.writeText(password);
-        this.message = 'Added password for "<b>' + this.passwords[key].domain + '</b>" to clipboard.';
+        notify('Added password for "' + this.passwords[key].domain + '" to clipboard.');
       }
     },
     async login(key: number) {
@@ -110,10 +110,10 @@ export default defineComponent({
       if (this.user && this.user.token) {
         apiPassword.addPassword(this.user.token, this.formPassword).then(() => {
           this.showForm = true;
-          this.message = 'Password is added.';
+          notify('Password is added.');
         }).catch((reason) => {
           this.showForm = true;
-          this.message = reason.toString();
+          notify(reason.toString());
         });
       }
     }
@@ -128,7 +128,6 @@ export default defineComponent({
       <input type="text" class="form-control" v-model="search" v-on:keyup.enter="getPasswords()">
       <button class="btn btn-success" type="button" @click="getPasswords()">Search</button>
     </div>
-    <div class="alert alert-info py-2" v-if="message" v-html="message"></div>
     <div class="table-responsive">
       <table class="table table-dark border-success text-light">
         <thead>

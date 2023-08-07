@@ -1,6 +1,6 @@
 {
   "name": "vue_chrome_extension",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
@@ -17,6 +17,7 @@
     "chart.js": "^4.3.3",
     "moment": "^2.29.4",
     "vue": "^3.2.45",
+    "vue-browser-notifications": "^1.1.1",
     "vue-chartjs": "^5.2.0"
   },
   "devDependencies": {
