@@ -27,6 +27,7 @@ export default defineComponent({
       currenciesSortedByBuy: [] as Currency[],
       currenciesSortedBySell: [] as Currency[],
       chartData: {},
+      currentCurrency: null as Currency | null,
     }
   },
   async created() {
@@ -36,7 +37,10 @@ export default defineComponent({
     async getCurrencies() {
       if (this.user && this.user.token) {
         this.spinner = true;
-        this.currencies = await apiCurrency.list(this.user.token, this.selectedCurrency, this.days)
+        this.currencies = await apiCurrency.list(this.user.token, this.selectedCurrency, this.days);
+        if (this.currencies.length) {
+          this.currentCurrency = this.currencies[this.currencies.length - 1];
+        }
 
         let datasetBuy = [], datasetSell = [], labels = [];
         for (let i = 0; i < this.currencies.length; i++) {
@@ -56,7 +60,6 @@ export default defineComponent({
         let copy = this.currencies;
         this.currenciesSortedByBuy = copy.sort(this.sortCurrenciesByBuy).slice(0, 5);
         this.currenciesSortedBySell = copy.sort(this.sortCurrenciesBySell).slice(0, 5);
-
         this.spinner = false;
       }
     },
@@ -100,7 +103,7 @@ export default defineComponent({
 </style>
 
 <template>
-  <div v-if="user && user.token === null" class="alert alert-warning py-2">You are not logged.</div>
+  <div v-if="!user || user.token === null" class="alert alert-warning py-2">You are not logged.</div>
   <div v-else>
     <div class="max-height-250">
       <div class="input-group">
@@ -114,6 +117,29 @@ export default defineComponent({
         <div class="spinner-border m-2" role="status"></div>
       </div>
       <div v-else>
+        <div class="row">
+          <div class="col-12 p-0" v-if="currencies.length">
+            <h2 class="text-light text-center">Current currency</h2>
+            <table class="table table-dark">
+              <thead>
+              <tr class="table-dark">
+                <th>Label</th>
+                <th>Buy</th>
+                <th>Sell</th>
+                <th>Date time</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>{{ currentCurrency.label }}</td>
+                <td><span class="badge bg-white text-dark">{{ currentCurrency.buy }}</span></td>
+                <td><span class="badge bg-success">{{ currentCurrency.sell }}</span></td>
+                <td>{{ date(currentCurrency.dateTime) }} {{ time(currentCurrency.dateTime) }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
         <div class="currency overflow-auto">
           <Chart v-bind:data="chartData"/>
         </div>

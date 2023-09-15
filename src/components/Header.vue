@@ -36,7 +36,7 @@ export default defineComponent({
     <span v-if="user && user.token">
       You are logged in as <span class="text-success fw-semibold">{{ user.email }}</span>.
     </span>
-    <span v-else class="badge bg-warning text-dark">You are not logged.</span>
+    <span v-if="!user || !user.token" class="badge bg-warning text-dark">You are not logged.</span>
     <div v-if="ip" @click="copyIP">Your IP: <span class="fw-bolder">{{ ip }}</span></div>
   </header>
   <header class="text-end" v-else>

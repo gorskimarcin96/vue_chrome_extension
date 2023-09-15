@@ -73,7 +73,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div v-if="user && user.token === null" class="alert alert-warning py-2">You are not logged.</div>
+  <div v-if="!user || user.token === null" class="alert alert-warning py-2">You are not logged.</div>
   <div v-else>
     <div class="card mb-2 text-white bg-transparent border-success">
       <todo-list v-bind:todoList="formTodoList"/>

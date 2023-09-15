@@ -50,7 +50,7 @@ export default defineComponent({
     },
     logout() {
       this.error = null;
-      this.$emit('user-data', this.user ? new User(user.id, user.email, user.token, 0) : null);
+      this.$emit('user-data', this.user ? new User(this.user.id, this.user.email, '', 0) : null);
     },
     getDeadlineToken() {
       return this.user && this.user.exp ? moment(new Date(this.user.exp * 1000)).format('YYYY-MM-DD HH:mm') : null;
