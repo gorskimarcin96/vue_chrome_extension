@@ -20,6 +20,7 @@ export default defineComponent({
   data() {
     return {
       spinner: false,
+      isAggregateData: false,
       days: 1,
       selectedCurrency: 'EUR',
       availableCurrencies: ['EUR', 'USD', 'CHF', 'GBP'],
@@ -42,26 +43,65 @@ export default defineComponent({
           this.currentCurrency = this.currencies[this.currencies.length - 1];
         }
 
-        let datasetBuy = [], datasetSell = [], labels = [];
-        for (let i = 0; i < this.currencies.length; i++) {
-          datasetBuy.push(parseFloat(this.currencies[i].buy));
-          datasetSell.push(parseFloat(this.currencies[i].sell));
-          labels.push(moment(this.currencies[i].dateTime).format('MM-DD HH:mm'));
+        if (this.currencies.length > 1000) {
+          this.isAggregateData = true;
         }
 
-        this.chartData = {
-          labels: labels,
-          datasets: [
-            {label: 'Buy', borderColor: '#f8f9fa', data: datasetBuy},
-            {label: 'Sell', borderColor: '#428133', data: datasetSell}
-          ]
-        };
+        this.loadChartData();
 
         let copy = this.currencies;
         this.currenciesSortedByBuy = copy.sort(this.sortCurrenciesByBuy).slice(0, 5);
         this.currenciesSortedBySell = copy.sort(this.sortCurrenciesBySell).slice(0, 5);
         this.spinner = false;
       }
+    },
+    loadChartData() {
+      let datasetBuy = [], datasetSell = [], labels = [];
+      for (const currency of this.isAggregateData ? this.aggregateCurrencies(this.currencies) : this.currencies) {
+        datasetBuy.push(parseFloat(currency.buy));
+        datasetSell.push(parseFloat(currency.sell));
+        labels.push(moment(currency.dateTime).format(this.isAggregateData ? 'MM-DD' : 'MM-DD HH:mm'));
+      }
+
+      this.chartData = {
+        labels: labels,
+        datasets: [
+          {label: 'Buy', borderColor: '#f8f9fa', data: datasetBuy},
+          {label: 'Sell', borderColor: '#428133', data: datasetSell}
+        ]
+      };
+    },
+    aggregateCurrencies(currencies: Currency[]): Currency[] {
+      const aggregatedData = new Map<string, { sellSum: number; buySum: number; count: number }>();
+
+      currencies.forEach((entry) => {
+        const date = entry.dateTime.toISOString().split("T")[0];
+
+        if (!aggregatedData.has(date)) {
+          aggregatedData.set(date, {sellSum: 0, buySum: 0, count: 0});
+        }
+
+        aggregatedData.get(date)!.sellSum += Number(entry.sell);
+        aggregatedData.get(date)!.buySum += Number(entry.buy);
+        aggregatedData.get(date)!.count += 1;
+      });
+
+      const averages = new Map<string, { averageSell: number; averageBuy: number, date: string }>();
+
+      aggregatedData.forEach((value, date: string) => {
+        averages.set(date, {
+          averageSell: value.sellSum / value.count,
+          averageBuy: value.buySum / value.count,
+          date: date,
+        });
+      });
+
+      return [...averages.values()].map((data: any) => new Currency(
+          this.selectedCurrency,
+          data.averageSell.toFixed(4),
+          data.averageBuy.toFixed(4),
+          data.date)
+      );
     },
     date(dateTime: Date): string {
       return moment(dateTime).format('YYYY-MM-DD')
@@ -82,11 +122,11 @@ export default defineComponent({
     },
     sortCurrenciesBySell(first: Currency, second: Currency) {
       if (first.sell > second.sell) {
-        return -1;
+        return 1;
       }
 
       if (first.sell < second.sell) {
-        return 1;
+        return -1;
       }
 
       return 0;
@@ -107,6 +147,10 @@ export default defineComponent({
   <div v-else>
     <div class="max-height-250">
       <div class="input-group">
+        <div class="input-group-text">
+          <label class="form-check-label me-2">Aggregate</label>
+          <input class="form-check-input" type="checkbox" @change.prevent="loadChartData" v-model="isAggregateData">
+        </div>
         <select class="form-select" v-model="selectedCurrency" @change="getCurrencies">
           <option v-for="currency in availableCurrencies" v-bind:value="currency">{{ currency }}</option>
         </select>
