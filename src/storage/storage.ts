@@ -1,4 +1,5 @@
 import {User} from "../models/User";
+import {IP} from "../models/IP";
 
 abstract class abstractStorage {
     private static storageData: any = {};
@@ -52,6 +53,20 @@ class storage extends abstractStorage {
 
     static setWords(words: string[]): void {
         return this.set('words', words);
+    }
+
+    static async getIPs(): Promise<IP[]> {
+        const data = await this.get('ips') ?? [];
+
+        return Array.isArray(data) ? data : Object.values(data);
+    }
+
+    static async addIP(ip: string): Promise<void> {
+        this.getIPs().then((ips) => {
+            ips.push({ip: ip, date: Date.now()})
+
+            this.set('ips', ips ?? [])
+        });
     }
 }
 

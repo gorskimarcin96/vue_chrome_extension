@@ -3,7 +3,7 @@
 ## Install
 
 ```sh
-vite
+npm install
 ```
 
 ## Build for production
