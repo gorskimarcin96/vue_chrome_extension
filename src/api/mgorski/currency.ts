@@ -6,7 +6,7 @@ class currency {
     static async list(token: string, currency: string, days: number): Promise<Currency[]> {
         return api
             .get('/currency/' + currency + '/' + days, {
-                headers: {'X-AUTH-TOKEN': token}
+                headers: {'TOKEN': token}
             })
             .then((response) => {
                 let currencies = [];

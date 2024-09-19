@@ -8,7 +8,7 @@ class todo {
         return api
             .get('/todo/', {
                 headers: {
-                    'X-AUTH-TOKEN': token,
+                    'TOKEN': token,
                     'Content-Type': 'application/json'
                 }
             })
@@ -38,7 +38,7 @@ class todo {
                 name: todoList.name
             }, {
                 headers: {
-                    'X-AUTH-TOKEN': token,
+                    'TOKEN': token,
                     'Content-Type': 'application/json'
                 }
             })
@@ -61,7 +61,7 @@ class todo {
                 description: todoTask.description,
             }, {
                 headers: {
-                    'X-AUTH-TOKEN': token,
+                    'TOKEN': token,
                     'Content-Type': 'application/json'
                 }
             })
@@ -82,7 +82,7 @@ class todo {
         return api
             .put(`/todo/task/${todoList.id}/status`, {}, {
                 headers: {
-                    'X-AUTH-TOKEN': token,
+                    'TOKEN': token,
                     'Content-Type': 'application/json'
                 }
             })
@@ -102,7 +102,7 @@ class todo {
         return api
             .put(`/todo/list/${todoList.id}/status`, {}, {
                 headers: {
-                    'X-AUTH-TOKEN': token,
+                    'TOKEN': token,
                     'Content-Type': 'application/json'
                 }
             })

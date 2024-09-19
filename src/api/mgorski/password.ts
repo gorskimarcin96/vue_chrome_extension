@@ -6,7 +6,7 @@ class password {
     static async list(token: string, phrase: string = ''): Promise<Password[]> {
         return api
             .get('/password/?phrase=' + phrase, {
-                headers: {'X-AUTH-TOKEN': token}
+                headers: {'TOKEN': token}
             })
             .then((response) => {
                 let passwords = [];
@@ -37,7 +37,7 @@ class password {
     static async getPassword(token: string, id: number): Promise<string> {
         return api
             .get('/password/' + id, {
-                headers: {'X-AUTH-TOKEN': token}
+                headers: {'TOKEN': token}
             })
             .then((response) => {
                 return response.data.password;
@@ -53,7 +53,7 @@ class password {
                 description: password.description,
             }, {
                 headers: {
-                    'X-AUTH-TOKEN': token,
+                    'TOKEN': token,
                     'Content-Type': 'application/json'
                 }
             })
