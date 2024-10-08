@@ -22,6 +22,5 @@ vite build
 ## Features 
 _You need create api for this app._
 1. Authorization - easy login form.
-2. Clipboard - storage for save words or sentences. We can quickly save it with shortcut "CTRL+Q". 
-3. Todo - we can create todo lists and todo task for list.
-4. Password - easy password wallet. You can log in to website with one click.
+2. Currency - currency data.
+3. Password - easy password wallet. You can log in to website with one click.

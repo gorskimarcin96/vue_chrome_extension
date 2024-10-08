@@ -1,11 +1,9 @@
 <script lang="ts">
-import {User} from "../models/User";
+import {User} from "@/models/User";
 import Login from "./Tabs/Login.vue";
 import Passwords from "./Tabs/Passwords.vue";
 import Currency from "./Tabs/Currency/Currency.vue";
-import Clipboard from "./Tabs/Clipboard.vue";
 import {defineComponent} from 'vue';
-import Todo from "./Tabs/Todo/Todo.vue";
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
 import storage from "../storage/storage";
@@ -15,8 +13,6 @@ export default defineComponent({
     Header,
     Footer,
     Login,
-    Clipboard,
-    Todo,
     Passwords,
     Currency
   },
@@ -24,7 +20,7 @@ export default defineComponent({
     return {
       user: null as User | null,
       currentTab: 'Login',
-      tabs: ['Passwords', 'Todo', 'Currency', 'Clipboard', 'Login'] as string[]
+      tabs: ['Passwords', 'Currency', 'Login'] as string[]
     }
   },
   methods: {
