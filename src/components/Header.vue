@@ -7,6 +7,8 @@ import {notify} from "../utils/notification";
 import {IP} from "@/models/IP";
 import storage from "@/storage/storage";
 import moment from "moment/moment";
+import apiNju from "../api/mgorski/nju";
+import {Nju} from "@/models/Nju";
 
 export default defineComponent({
   props: {
@@ -18,7 +20,8 @@ export default defineComponent({
       isShowHistoryIp: false,
       ip: "",
       ips: [] as IP[],
-      isDevelopmentMode: false
+      isDevelopmentMode: false,
+      njuData: null as Nju
     }
   },
   methods: {
@@ -48,6 +51,9 @@ export default defineComponent({
     this.ip = await ip.get();
     this.ips = await storage.getIPs() ?? [];
     this.updateIPinStorage();
+    if (this.user && this.user.token) {
+      this.njuData = await apiNju.current(this.user.token);
+    }
     this.loadedData = true;
   }
 });
@@ -74,6 +80,9 @@ export default defineComponent({
       <span v-if="ip" @click="copyIP(ip)">Your IP: <span class="fw-bolder">{{ ip }}</span></span>
       <span v-if="!isShowHistoryIp" @click="showHistoryIp" class="link-success cursor-pointer"> - show IP history</span>
     </div>
+    <span class="badge bg-warning text-dark" v-if="njuData">
+      NJU {{ njuData.usedNet }}GB / {{ njuData.totalNet}}GB
+    </span>
   </header>
   <header class="text-end" v-else>
     <div class="spinner-border m-2" role="status"></div>
