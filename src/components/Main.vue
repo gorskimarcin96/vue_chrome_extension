@@ -3,6 +3,7 @@ import {User} from "@/models/User";
 import Login from "./Tabs/Login.vue";
 import Passwords from "./Tabs/Passwords.vue";
 import Currency from "./Tabs/Currency/Currency.vue";
+import Coin from "./Tabs/Coin/Coin.vue";
 import {defineComponent} from 'vue';
 import Header from "./Header.vue";
 import Footer from "./Footer.vue";
@@ -14,13 +15,14 @@ export default defineComponent({
     Footer,
     Login,
     Passwords,
-    Currency
+    Currency,
+    Coin
   },
   data: function () {
     return {
       user: null as User | null,
       currentTab: 'Login',
-      tabs: ['Passwords', 'Currency', 'Login'] as string[]
+      tabs: ['Passwords', 'Currency', 'Coin', 'Login'] as string[]
     }
   },
   methods: {
