@@ -1,9 +1,9 @@
 <script lang="ts">
 
 import {defineComponent} from "vue";
-import {User} from "../models/User";
+import {User} from "@/models/User";
 import ip from "../api/ipify/ip";
-import {notify} from "../utils/notification";
+import {notify} from "@/utils/notification";
 import {IP} from "@/models/IP";
 import storage from "@/storage/storage";
 import moment from "moment/moment";
