@@ -1,9 +1,9 @@
 <script lang="ts">
 
 import {defineComponent} from "vue";
-import {User} from "../models/User";
+import {User} from "@/models/User";
 import ip from "../api/ipify/ip";
-import {notify} from "../utils/notification";
+import {notify} from "@/utils/notification";
 import {IP} from "@/models/IP";
 import storage from "@/storage/storage";
 import moment from "moment/moment";
@@ -24,6 +24,7 @@ export default defineComponent({
       njuData: null as Nju
     }
   },
+  watch: {user: {immediate: true, handler: "fetchNjuData"}},
   methods: {
     async copyIP(ip: string) {
       navigator.clipboard.writeText(ip.trim());
@@ -44,16 +45,17 @@ export default defineComponent({
     },
     showHistoryIp() {
       this.isShowHistoryIp = true;
-    }
+    },
+    async fetchNjuData() {
+      this.njuData = this.user && this.user.token ? await apiNju.current(this.user.token) : null;
+    },
   },
   created: async function () {
     this.isDevelopmentMode = process.env.NODE_ENV === 'development';
     this.ip = await ip.get();
     this.ips = await storage.getIPs() ?? [];
     this.updateIPinStorage();
-    if (this.user && this.user.token) {
-      this.njuData = await apiNju.current(this.user.token);
-    }
+    await this.fetchNjuData();
     this.loadedData = true;
   }
 });
@@ -61,7 +63,7 @@ export default defineComponent({
 
 <template>
   <header class="p-2 px-3 small text-end" v-if="loadedData">
-    <span class="mx-2 badge bg-danger" v-if="isDevelopmentMode === true">DEV MODE</span>
+    <span class="mx-2 badge bg-danger" v-if="isDevelopmentMode">DEV MODE</span>
     <span v-if="user && user.token">
       You are logged in as <span class="text-success fw-semibold">{{ user.email }}</span>.
     </span>
@@ -81,7 +83,7 @@ export default defineComponent({
       <span v-if="!isShowHistoryIp" @click="showHistoryIp" class="link-success cursor-pointer"> - show IP history</span>
     </div>
     <span class="badge bg-warning text-dark" v-if="njuData">
-      NJU {{ njuData.usedNet }}GB / {{ njuData.totalNet}}GB
+      NJU {{ njuData.usedNet }}GB / {{ njuData.totalNet }}GB
     </span>
   </header>
   <header class="text-end" v-else>
