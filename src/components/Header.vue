@@ -26,9 +26,6 @@ export default defineComponent({
       navigator.clipboard.writeText(ip.trim());
       notify('Added IP "' + ip.trim() + '" to clipboard.');
     },
-    showHistoryIp() {
-      this.isShowHistoryIp = true;
-    },
     async fetchNjuData() {
       this.njuData = this.user && this.user.token ? await apiNju.current(this.user.token) : null;
     },
@@ -44,7 +41,6 @@ export default defineComponent({
 
 <template>
   <header class="p-2 px-3 small text-end" v-if="loadedData">
-    <span class="mx-2 badge bg-danger" v-if="isDevelopmentMode">DEV MODE</span>
     <span v-if="user && user.token">
       You are logged in as <span class="text-success fw-semibold">{{ user.email }}</span>.
     </span>
@@ -52,6 +48,7 @@ export default defineComponent({
     <div>
       <span v-if="ip" @click="copyIP(ip)">Your IP: <span class="fw-bolder">{{ ip }}</span></span>
     </div>
+    <span class="mx-2 badge bg-danger" v-if="isDevelopmentMode">DEV MODE</span>
     <span class="badge bg-warning text-dark" v-if="njuData">
       NJU {{ njuData.usedNet }}GB / {{ njuData.totalNet }}GB
     </span>

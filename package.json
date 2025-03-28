@@ -3,8 +3,7 @@
   "version": "1.0.20",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",

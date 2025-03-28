@@ -3,13 +3,13 @@
 ## Install
 
 ```sh
-npm install
+npm run dev
 ```
 
 ## Build for production
 
 ```sh
-vite build
+npm run build
 ```
 
 ## Install chrome extension
