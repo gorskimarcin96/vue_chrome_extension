@@ -9,6 +9,7 @@ import Header from "./Header.vue";
 import Footer from "./Footer.vue";
 import storage from "../storage/storage";
 import Nju from "@/components/Tabs/Nju/Nju.vue";
+import Todo from "@/components/Tabs/Todo/Todo.vue";
 
 export default defineComponent({
   components: {
@@ -18,13 +19,14 @@ export default defineComponent({
     Passwords,
     Currency,
     Coin,
-    Nju
+    Nju,
+    Todo
   },
   data: function () {
     return {
       user: null as User | null,
       currentTab: 'Login',
-      tabs: ['Passwords', 'Currency', 'Coin', 'Nju', 'Login'] as string[]
+      tabs: ['Passwords', 'Todo', 'Currency', 'Coin', 'Nju', 'Login'] as string[]
     }
   },
   methods: {
